@@ -163,6 +163,46 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Responsables",
+			"item": [
+				{
+					"name": "Listar Responsables",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/responsables",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "responsables"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Responsable",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"María García\",\n  \"correo\": \"maria.garcia@empresa.com\",\n  \"area\": \"Auditoría Interna\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/responsables",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "responsables"]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
