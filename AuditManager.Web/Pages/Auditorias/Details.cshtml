@@ -1,0 +1,55 @@
+@page "{id:Guid}"
+@model AuditManager.Web.Pages.Auditorias.DetailsModel
+@{
+    ViewData["Title"] = "Detalles de Auditoría";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Detalles: @Model.Auditoria.Titulo</h1>
+    <div>
+        <span class="badge @(Model.Auditoria.Estado == AuditManager.Core.Enums.EstadoAuditoria.Pendiente ? "bg-warning" : Model.Auditoria.Estado == AuditManager.Core.Enums.EstadoAuditoria.EnProceso ? "bg-info" : "bg-success") fs-5">
+            @Model.Auditoria.Estado
+        </span>
+    </div>
+</div>
+<hr />
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Área Auditada</dt>
+            <dd class="col-sm-8">@Model.Auditoria.AreaAuditada</dd>
+
+            <dt class="col-sm-4">Fecha Inicio</dt>
+            <dd class="col-sm-8">@Model.Auditoria.FechaInicio.ToShortDateString()</dd>
+
+            <dt class="col-sm-4">Fecha Fin</dt>
+            <dd class="col-sm-8">@Model.Auditoria.FechaFin.ToShortDateString()</dd>
+
+            <dt class="col-sm-4">ID Responsable</dt>
+            <dd class="col-sm-8">@Model.Auditoria.ResponsableId</dd>
+        </dl>
+    </div>
+    <div class="col-md-6 text-end">
+        @if (Model.Auditoria.Estado == AuditManager.Core.Enums.EstadoAuditoria.EnProceso)
+        {
+            <form method="post" asp-page-handler="Finalize" asp-route-id="@Model.Auditoria.Id" class="d-inline">
+                <button type="submit" class="btn btn-success" onclick="return confirm('¿Está seguro de finalizar esta auditoría?');">
+                    Finalizar Auditoría
+                </button>
+            </form>
+            <a asp-page="/Hallazgos/Create" asp-route-auditoriaId="@Model.Auditoria.Id" class="btn btn-primary ms-2">
+                Agregar Hallazgo
+            </a>
+        }
+        <a asp-page="/Index" class="btn btn-secondary ms-2">Volver</a>
+    </div>
+</div>
+
+<h3>Hallazgos</h3>
+<p class="text-muted">La gestión completa de lectura de hallazgos requeriría actualizar el DTO para incluirlos, pero por el momento la creación y eliminación están soportadas.</p>

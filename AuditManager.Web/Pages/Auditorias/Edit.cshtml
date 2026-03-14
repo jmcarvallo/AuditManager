@@ -1,0 +1,58 @@
+@page "{id:Guid}"
+@model AuditManager.Web.Pages.Auditorias.EditModel
+@{
+    ViewData["Title"] = "Editar Auditoría";
+}
+
+<h1>Editar Auditoría</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Command.Id" />
+            
+            <div class="mb-3">
+                <label asp-for="Command.Titulo" class="form-label">Título</label>
+                <input asp-for="Command.Titulo" class="form-control" />
+                <span asp-validation-for="Command.Titulo" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Command.AreaAuditada" class="form-label">Área Auditada</label>
+                <input asp-for="Command.AreaAuditada" class="form-control" />
+                <span asp-validation-for="Command.AreaAuditada" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col">
+                    <label asp-for="Command.FechaInicio" class="form-label">Fecha Inicio</label>
+                    <input asp-for="Command.FechaInicio" type="date" class="form-control" />
+                    <span asp-validation-for="Command.FechaInicio" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Command.FechaFin" class="form-label">Fecha Fin</label>
+                    <input asp-for="Command.FechaFin" type="date" class="form-control" />
+                    <span asp-validation-for="Command.FechaFin" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Command.ResponsableId" class="form-label">ID del Responsable</label>
+                <input asp-for="Command.ResponsableId" class="form-control" />
+                <span asp-validation-for="Command.ResponsableId" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Actualizar Cambios</button>
+                <button type="submit" asp-page-handler="StartAudit" class="btn btn-success ms-2">Pasar a 'En Proceso'</button>
+                <a asp-page="/Index" class="btn btn-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

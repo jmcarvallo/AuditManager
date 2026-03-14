@@ -1,0 +1,57 @@
+@page
+@model AuditManager.Web.Pages.Auditorias.CreateModel
+@{
+    ViewData["Title"] = "Nueva Auditoría";
+}
+
+<h1>Nueva Auditoría</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label asp-for="Command.Titulo" class="form-label">Título</label>
+                <input asp-for="Command.Titulo" class="form-control" />
+                <span asp-validation-for="Command.Titulo" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Command.AreaAuditada" class="form-label">Área Auditada</label>
+                <input asp-for="Command.AreaAuditada" class="form-control" />
+                <span asp-validation-for="Command.AreaAuditada" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col">
+                    <label asp-for="Command.FechaInicio" class="form-label">Fecha Inicio</label>
+                    <input asp-for="Command.FechaInicio" type="date" class="form-control" />
+                    <span asp-validation-for="Command.FechaInicio" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Command.FechaFin" class="form-label">Fecha Fin</label>
+                    <input asp-for="Command.FechaFin" type="date" class="form-control" />
+                    <span asp-validation-for="Command.FechaFin" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Command.ResponsableId" class="form-label">ID del Responsable</label>
+                <input asp-for="Command.ResponsableId" class="form-control" placeholder="00000000-0000-0000-0000-000000000000"/>
+                <span asp-validation-for="Command.ResponsableId" class="text-danger"></span>
+                <small class="form-text text-muted">A los fines de prueba, ingrese un GUID válido que exista en la BD (o mock).</small>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-page="/Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

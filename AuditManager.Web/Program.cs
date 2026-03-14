@@ -1,7 +1,16 @@
+using System;
+using AuditManager.Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+// Configure API Client
+builder.Services.AddHttpClient<IAuditoriaApiClient, AuditoriaApiClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5133/");
+});
 
 var app = builder.Build();
 

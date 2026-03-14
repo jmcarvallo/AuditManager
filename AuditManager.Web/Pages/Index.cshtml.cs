@@ -1,19 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AuditManager.Application.DTOs;
+using AuditManager.Web.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AuditManager.Web.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(IAuditoriaApiClient apiClient) : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    public List<AuditoriaDto> Auditorias { get; set; } = [];
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public async Task OnGetAsync()
     {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-
+        Auditorias = await apiClient.GetAuditoriasAsync();
     }
 }

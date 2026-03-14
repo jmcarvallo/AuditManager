@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "4b68ce9d-9e19-4a94-bba9-11c50e206ab6",
+		"name": "AuditManager API",
+		"description": "Endpoints para gestionar Auditorias y Hallazgos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auditorías",
+			"item": [
+				{
+					"name": "Listar Auditorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auditorias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auditorias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Auditoria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"titulo\": \"Auditoría de Sistemas 2026\",\n  \"fechaInicio\": \"2026-03-20T00:00:00\",\n  \"fechaFin\": \"2026-04-20T00:00:00\",\n  \"areaAuditada\": \"IT Department\",\n  \"responsableId\": \"<A GUID HERE>\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auditorias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auditorias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Auditoria",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"<AUDITORIA_ID>\",\n  \"titulo\": \"Auditoría de Sistemas - Actualizada\",\n  \"fechaInicio\": \"2026-03-20\",\n  \"fechaFin\": \"2026-04-25\",\n  \"areaAuditada\": \"IT Department\",\n  \"responsableId\": \"<RESPONSABLE_ID>\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auditorias/<AUDITORIA_ID>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auditorias",
+								"<AUDITORIA_ID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Estado (A EnProceso)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"<AUDITORIA_ID>\",\n  \"nuevoEstado\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auditorias/<AUDITORIA_ID>/estado",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auditorias",
+								"<AUDITORIA_ID>",
+								"estado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Hallazgos",
+			"item": [
+				{
+					"name": "Crear Hallazgo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"auditoriaId\": \"<AUDITORIA_ID>\",\n  \"descripcion\": \"Fallo en la validación de tokens JWT\",\n  \"tipo\": 0,\n  \"severidad\": 2,\n  \"fechaDeteccion\": \"2026-03-25T00:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/hallazgos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"hallazgos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Hallazgo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/hallazgos/<HALLAZGO_ID>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"hallazgos",
+								"<HALLAZGO_ID>"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5133",
+			"type": "string"
+		}
+	]
+}

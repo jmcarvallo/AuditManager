@@ -1,10 +1,52 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Auditorías";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Listado de Auditorías</h1>
+    <a asp-page="/Auditorias/Create" class="btn btn-primary">Nueva Auditoría</a>
 </div>
+
+<table class="table table-striped table-hover mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Título</th>
+            <th>Área Auditada</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Auditorias)
+        {
+            <tr>
+                <td>@item.Titulo</td>
+                <td>@item.AreaAuditada</td>
+                <td>@item.FechaInicio.ToShortDateString()</td>
+                <td>@item.FechaFin.ToShortDateString()</td>
+                <td>
+                    <span class="badge @(item.Estado == AuditManager.Core.Enums.EstadoAuditoria.Pendiente ? "bg-warning" : item.Estado == AuditManager.Core.Enums.EstadoAuditoria.EnProceso ? "bg-info" : "bg-success")">
+                        @item.Estado
+                    </span>
+                </td>
+                <td>
+                    <a asp-page="/Auditorias/Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalles</a>
+                    @if (item.Estado == AuditManager.Core.Enums.EstadoAuditoria.Pendiente)
+                    {
+                        <a asp-page="/Auditorias/Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                    }
+                </td>
+            </tr>
+        }
+        @if (!Model.Auditorias.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">No hay auditorías registradas.</td>
+            </tr>
+        }
+    </tbody>
+</table>

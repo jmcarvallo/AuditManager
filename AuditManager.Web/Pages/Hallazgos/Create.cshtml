@@ -1,0 +1,53 @@
+@page
+@model AuditManager.Web.Pages.Hallazgos.CreateModel
+@{
+    ViewData["Title"] = "Agregar Hallazgo";
+}
+
+<h1>Agregar Hallazgo</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Command.AuditoriaId" />
+
+            <div class="mb-3">
+                <label asp-for="Command.Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Command.Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Command.Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col">
+                    <label asp-for="Command.Tipo" class="form-label">Tipo</label>
+                    <select asp-for="Command.Tipo" class="form-select" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.TipoHallazgo>()">
+                    </select>
+                    <span asp-validation-for="Command.Tipo" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Command.Severidad" class="form-label">Severidad</label>
+                    <select asp-for="Command.Severidad" class="form-select" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.SeveridadHallazgo>()">
+                    </select>
+                    <span asp-validation-for="Command.Severidad" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Command.FechaDeteccion" class="form-label">Fecha de Detección</label>
+                <input asp-for="Command.FechaDeteccion" type="datetime-local" class="form-control" />
+                <span asp-validation-for="Command.FechaDeteccion" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a asp-page="/Auditorias/Details" asp-route-id="@Model.Command.AuditoriaId" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
