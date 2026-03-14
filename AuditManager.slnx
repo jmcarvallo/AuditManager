@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="AuditManager.API/AuditManager.API.csproj" />
+  <Project Path="AuditManager.Application/AuditManager.Application.csproj" />
+  <Project Path="AuditManager.Core/AuditManager.Core.csproj" />
+  <Project Path="AuditManager.Infrastructure/AuditManager.Infrastructure.csproj" />
+  <Project Path="AuditManager.Tests/AuditManager.Tests.csproj" />
+  <Project Path="AuditManager.Web/AuditManager.Web.csproj" />
+</Solution>

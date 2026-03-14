@@ -1,0 +1,6 @@
+@AuditManager.API_HostAddress = http://localhost:5133
+
+GET {{AuditManager.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
