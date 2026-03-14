@@ -14,6 +14,40 @@ GO
 USE [AuditManagerDb];
 GO
 
+-- 1. TABLA: Responsables
+CREATE TABLE Responsables (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Nombre NVARCHAR(100) NOT NULL,
+    Correo NVARCHAR(100) NOT NULL,
+    Area NVARCHAR(100) NOT NULL
+);
+GO
+
+-- 2. TABLA: Auditorias
+CREATE TABLE Auditorias (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Titulo NVARCHAR(200) NOT NULL,
+    FechaInicio DATETIME2 NOT NULL,
+    FechaFin DATETIME2 NOT NULL,
+    Estado INT NOT NULL DEFAULT 0, -- 0: Pendiente, 1: EnProceso, 2: Finalizada
+    AreaAuditada NVARCHAR(100) NOT NULL,
+    ResponsableId UNIQUEIDENTIFIER NOT NULL,
+    CONSTRAINT FK_Auditorias_Responsables FOREIGN KEY (ResponsableId) REFERENCES Responsables(Id)
+);
+GO
+
+-- 3. TABLA: Hallazgos
+CREATE TABLE Hallazgos (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    AuditoriaId UNIQUEIDENTIFIER NOT NULL,
+    Descripcion NVARCHAR(MAX) NOT NULL,
+    Tipo INT NOT NULL, -- 0: Observacion, 1: NoConformidadMenor, 2: NoConformidadMayor ...
+    Severidad INT NOT NULL, -- 0: Baja, 1: Media, 2: Alta
+    FechaDeteccion DATETIME2 NOT NULL,
+    CONSTRAINT FK_Hallazgos_Auditorias FOREIGN KEY (AuditoriaId) REFERENCES Auditorias(Id) ON DELETE CASCADE
+);
+GO
+
 -- VISTA: Auditorías finalizadas con número de hallazgos por severidad
 CREATE OR ALTER VIEW vw_AuditoriasFinalizadasResumen
 AS
