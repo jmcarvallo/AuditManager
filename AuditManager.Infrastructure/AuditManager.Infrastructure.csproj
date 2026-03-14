@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuditManager.Core\AuditManager.Core.csproj" />
+    <ProjectReference Include="..\AuditManager.Application\AuditManager.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
