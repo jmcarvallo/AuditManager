@@ -58,9 +58,9 @@ SELECT
     A.FechaFin,
     A.AreaAuditada,
     R.Nombre AS Responsable,
-    ISNULL(SUM(CASE WHEN H.Severidad = 'Baja' THEN 1 ELSE 0 END), 0) AS HallazgosBaja,
-    ISNULL(SUM(CASE WHEN H.Severidad = 'Media' THEN 1 ELSE 0 END), 0) AS HallazgosMedia,
-    ISNULL(SUM(CASE WHEN H.Severidad = 'Alta' THEN 1 ELSE 0 END), 0) AS HallazgosAlta,
+    ISNULL(SUM(CASE WHEN H.Severidad = 0 THEN 1 ELSE 0 END), 0) AS HallazgosBaja,   -- 0 = Baja
+    ISNULL(SUM(CASE WHEN H.Severidad = 1 THEN 1 ELSE 0 END), 0) AS HallazgosMedia,  -- 1 = Media
+    ISNULL(SUM(CASE WHEN H.Severidad = 2 THEN 1 ELSE 0 END), 0) AS HallazgosAlta,   -- 2 = Alta
     COUNT(H.Id) AS TotalHallazgos
 FROM 
     Auditorias A
@@ -69,7 +69,7 @@ LEFT JOIN
 LEFT JOIN 
     Responsables R ON A.ResponsableId = R.Id
 WHERE 
-    A.Estado = 'Finalizada'
+    A.Estado = 2  -- 2 = Finalizada
 GROUP BY 
     A.Id, A.Titulo, A.FechaInicio, A.FechaFin, A.AreaAuditada, R.Nombre;
 GO

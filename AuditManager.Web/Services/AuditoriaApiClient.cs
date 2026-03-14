@@ -76,4 +76,14 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         var response = await httpClient.DeleteAsync($"api/hallazgos/{hallazgoId}");
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<List<AuditoriaResumenDto>> GetReporteAsync(DateTime? fechaInicio = null, DateTime? fechaFin = null)
+    {
+        var url = "api/reportes/auditorias-finalizadas";
+        var query = new List<string>();
+        if (fechaInicio.HasValue) query.Add($"fechaInicio={fechaInicio.Value:yyyy-MM-dd}");
+        if (fechaFin.HasValue) query.Add($"fechaFin={fechaFin.Value:yyyy-MM-dd}");
+        if (query.Count > 0) url += "?" + string.Join("&", query);
+        return await httpClient.GetFromJsonAsync<List<AuditoriaResumenDto>>(url) ?? new List<AuditoriaResumenDto>();
+    }
 }

@@ -1,5 +1,6 @@
 using AuditManager.Core.Entities;
 using AuditManager.Core.Enums;
+using AuditManager.Infrastructure.Data.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuditManager.Infrastructure.Data;
@@ -13,6 +14,9 @@ public class AppDbContext : DbContext
     public DbSet<Auditoria> Auditorias { get; set; } = null!;
     public DbSet<Hallazgo> Hallazgos { get; set; } = null!;
     public DbSet<Responsable> Responsables { get; set; } = null!;
+
+    // Entidad keyless — mapea directamente a la vista SQL vw_AuditoriasFinalizadasResumen
+    public DbSet<AuditoriaResumenView> AuditoriasResumen { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,5 +34,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Hallazgo>()
             .Property(h => h.Severidad)
             .HasConversion<int>();
+
+        // Configurar la entidad keyless apuntando a la vista SQL
+        modelBuilder.Entity<AuditoriaResumenView>()
+            .HasNoKey()
+            .ToView("vw_AuditoriasFinalizadasResumen");
     }
 }

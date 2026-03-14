@@ -23,4 +23,5 @@ public interface IAuditoriaApiClient
     Task CreateHallazgoAsync(CreateHallazgoCommand command);
     Task<List<HallazgoDto>> GetHallazgosByAuditoriaAsync(Guid auditoriaId);
     Task DeleteHallazgoAsync(Guid hallazgoId);
+    Task<List<AuditoriaResumenDto>> GetReporteAsync(DateTime? fechaInicio = null, DateTime? fechaFin = null);
 }
