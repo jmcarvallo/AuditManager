@@ -14,9 +14,12 @@ namespace AuditManager.Web.Services;
 
 public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
 {
-    public async Task<List<AuditoriaDto>> GetAuditoriasAsync()
+    public async Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null)
     {
-        return await httpClient.GetFromJsonAsync<List<AuditoriaDto>>("api/auditorias") ?? new List<AuditoriaDto>();
+        var url = responsableId.HasValue
+            ? $"api/auditorias?responsableId={responsableId.Value}"
+            : "api/auditorias";
+        return await httpClient.GetFromJsonAsync<List<AuditoriaDto>>(url) ?? new List<AuditoriaDto>();
     }
 
     public async Task<AuditoriaDto?> GetAuditoriaByIdAsync(Guid id)
