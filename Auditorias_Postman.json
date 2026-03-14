@@ -117,6 +117,25 @@
 			"name": "Hallazgos",
 			"item": [
 				{
+					"name": "Listar Hallazgos por Auditoría",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/hallazgos?auditoriaId=<AUDITORIA_ID>",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hallazgos"],
+							"query": [
+								{
+									"key": "auditoriaId",
+									"value": "<AUDITORIA_ID>"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Crear Hallazgo",
 					"request": {
 						"method": "POST",
