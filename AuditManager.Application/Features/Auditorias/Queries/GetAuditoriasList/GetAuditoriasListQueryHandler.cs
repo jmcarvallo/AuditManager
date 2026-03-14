@@ -28,6 +28,9 @@ public class GetAuditoriasListQueryHandler(IRepository<Auditoria> repository)
         if (request.Estado.HasValue)
             query = query.Where(a => a.Estado == request.Estado.Value);
 
+        if (request.ResponsableId.HasValue)
+            query = query.Where(a => a.ResponsableId == request.ResponsableId.Value);
+
         return query.Select(a => new AuditoriaDto(
             a.Id, 
             a.Titulo, 

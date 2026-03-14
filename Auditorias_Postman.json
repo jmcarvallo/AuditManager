@@ -16,12 +16,31 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/auditorias",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auditorias"
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auditorias"],
+							"query": [
+								{
+									"key": "fechaInicio",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "fechaFin",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "estado",
+									"value": "",
+									"description": "0=Pendiente, 1=EnProceso, 2=Finalizada",
+									"disabled": true
+								},
+								{
+									"key": "responsableId",
+									"value": "<RESPONSABLE_ID>",
+									"description": "GUID del responsable para filtrar auditorías",
+									"disabled": true
+								}
 							]
 						}
 					},

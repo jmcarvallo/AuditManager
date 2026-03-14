@@ -9,5 +9,6 @@ namespace AuditManager.Application.Features.Auditorias.Queries.GetAuditoriasList
 public record GetAuditoriasListQuery(
     DateTime? FechaInicio, 
     DateTime? FechaFin, 
-    EstadoAuditoria? Estado
+    EstadoAuditoria? Estado,
+    Guid? ResponsableId
 ) : IRequest<List<AuditoriaDto>>;
