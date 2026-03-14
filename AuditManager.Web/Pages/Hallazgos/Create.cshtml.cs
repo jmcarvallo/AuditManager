@@ -1,14 +1,13 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AuditManager.Application.Features.Hallazgos.Commands.Create;
+using AuditManager.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AuditManager.Web.Pages.Hallazgos;
 
-public class CreateModel(HttpClient httpClient) : PageModel
+public class CreateModel(IAuditoriaApiClient apiClient) : PageModel
 {
     [BindProperty]
     public CreateHallazgoCommand Command { get; set; } = default!;
@@ -21,20 +20,11 @@ public class CreateModel(HttpClient httpClient) : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
+        if (!ModelState.IsValid) return Page();
 
         try
         {
-            var response = await httpClient.PostAsJsonAsync("api/hallazgos", Command);
-            if (!response.IsSuccessStatusCode)
-            {
-               var error = await response.Content.ReadAsStringAsync();
-               ModelState.AddModelError(string.Empty, $"Error de API: {error}");
-               return Page();
-            }
+            await apiClient.CreateHallazgoAsync(Command);
             return RedirectToPage("/Auditorias/Details", new { id = Command.AuditoriaId });
         }
         catch (Exception ex)

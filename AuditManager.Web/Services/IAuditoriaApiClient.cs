@@ -5,6 +5,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Responsables.Commands.Create;
 
 namespace AuditManager.Web.Services;
@@ -19,4 +20,5 @@ public interface IAuditoriaApiClient
 
     Task<List<ResponsableDto>> GetResponsablesAsync();
     Task<Guid> CreateResponsableAsync(CreateResponsableCommand command);
+    Task CreateHallazgoAsync(CreateHallazgoCommand command);
 }

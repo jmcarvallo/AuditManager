@@ -7,6 +7,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Responsables.Commands.Create;
 
 namespace AuditManager.Web.Services;
@@ -54,5 +55,11 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         var response = await httpClient.PostAsJsonAsync("api/responsables", command);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<Guid>();
+    }
+
+    public async Task CreateHallazgoAsync(CreateHallazgoCommand command)
+    {
+        var response = await httpClient.PostAsJsonAsync("api/hallazgos", command);
+        response.EnsureSuccessStatusCode();
     }
 }
