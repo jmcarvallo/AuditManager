@@ -1,4 +1,5 @@
 using AuditManager.Core.Entities;
+using AuditManager.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuditManager.Infrastructure.Data;
@@ -16,6 +17,18 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        // Guardar enums como enteros (INT) en SQL Server, no como texto
+        modelBuilder.Entity<Auditoria>()
+            .Property(a => a.Estado)
+            .HasConversion<int>();
+
+        modelBuilder.Entity<Hallazgo>()
+            .Property(h => h.Tipo)
+            .HasConversion<int>();
+
+        modelBuilder.Entity<Hallazgo>()
+            .Property(h => h.Severidad)
+            .HasConversion<int>();
     }
 }
