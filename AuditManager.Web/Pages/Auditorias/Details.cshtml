@@ -52,4 +52,50 @@
 </div>
 
 <h3>Hallazgos</h3>
-<p class="text-muted">La gestión completa de lectura de hallazgos requeriría actualizar el DTO para incluirlos, pero por el momento la creación y eliminación están soportadas.</p>
+
+@if (!Model.Hallazgos.Any())
+{
+    <p class="text-muted">No hay hallazgos registrados para esta auditoría.</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Severidad</th>
+                <th>Fecha Detección</th>
+                @if (Model.Auditoria.Estado == AuditManager.Core.Enums.EstadoAuditoria.EnProceso)
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in Model.Hallazgos)
+            {
+                <tr>
+                    <td>@h.Descripcion</td>
+                    <td>@h.Tipo</td>
+                    <td>
+                        <span class="badge @(h.Severidad == AuditManager.Core.Enums.SeveridadHallazgo.Alta ? "bg-danger" : h.Severidad == AuditManager.Core.Enums.SeveridadHallazgo.Media ? "bg-warning text-dark" : "bg-success")">
+                            @h.Severidad
+                        </span>
+                    </td>
+                    <td>@h.FechaDeteccion.ToShortDateString()</td>
+                    @if (Model.Auditoria.Estado == AuditManager.Core.Enums.EstadoAuditoria.EnProceso)
+                    {
+                        <td>
+                            <form method="post" asp-page-handler="DeleteHallazgo" asp-route-hallazgoId="@h.Id" asp-route-auditoriaId="@Model.Auditoria.Id">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar este hallazgo?');">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

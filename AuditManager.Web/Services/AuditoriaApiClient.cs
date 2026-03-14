@@ -62,4 +62,15 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         var response = await httpClient.PostAsJsonAsync("api/hallazgos", command);
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<List<HallazgoDto>> GetHallazgosByAuditoriaAsync(Guid auditoriaId)
+    {
+        return await httpClient.GetFromJsonAsync<List<HallazgoDto>>($"api/hallazgos?auditoriaId={auditoriaId}") ?? new List<HallazgoDto>();
+    }
+
+    public async Task DeleteHallazgoAsync(Guid hallazgoId)
+    {
+        var response = await httpClient.DeleteAsync($"api/hallazgos/{hallazgoId}");
+        response.EnsureSuccessStatusCode();
+    }
 }
