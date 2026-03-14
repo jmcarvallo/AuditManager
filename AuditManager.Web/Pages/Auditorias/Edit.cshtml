@@ -39,8 +39,10 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Command.ResponsableId" class="form-label">ID del Responsable</label>
-                <input asp-for="Command.ResponsableId" class="form-control" />
+                <label asp-for="Command.ResponsableId" class="form-label">Responsable</label>
+                <select asp-for="Command.ResponsableId" asp-items="Model.ResponsablesSelectList" class="form-select">
+                    <option value="">-- Seleccione un responsable --</option>
+                </select>
                 <span asp-validation-for="Command.ResponsableId" class="text-danger"></span>
             </div>
 

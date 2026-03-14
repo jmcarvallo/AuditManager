@@ -1,0 +1,36 @@
+@page
+@model AuditManager.Web.Pages.Responsables.IndexModel
+@{
+    ViewData["Title"] = "Responsables";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Responsables / Auditores</h1>
+    <a asp-page="/Responsables/Create" class="btn btn-primary">Nuevo Responsable</a>
+</div>
+
+<table class="table table-striped table-hover mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Área</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Responsables)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.Correo</td>
+                <td>@item.Area</td>
+            </tr>
+        }
+        @if (!Model.Responsables.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center">No hay responsables registrados.</td>
+            </tr>
+        }
+    </tbody>
+</table>

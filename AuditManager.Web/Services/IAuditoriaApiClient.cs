@@ -5,6 +5,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Responsables.Commands.Create;
 
 namespace AuditManager.Web.Services;
 
@@ -15,4 +16,7 @@ public interface IAuditoriaApiClient
     Task<AuditoriaDto?> CreateAuditoriaAsync(CreateAuditoriaCommand command);
     Task<bool> UpdateAuditoriaAsync(Guid id, UpdateAuditoriaCommand command);
     Task<bool> ChangeStatusAsync(Guid id, UpdateAuditoriaStatusCommand command);
+
+    Task<List<ResponsableDto>> GetResponsablesAsync();
+    Task<Guid> CreateResponsableAsync(CreateResponsableCommand command);
 }

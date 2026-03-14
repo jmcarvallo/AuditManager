@@ -38,10 +38,11 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Command.ResponsableId" class="form-label">ID del Responsable</label>
-                <input asp-for="Command.ResponsableId" class="form-control" placeholder="00000000-0000-0000-0000-000000000000"/>
+                <label asp-for="Command.ResponsableId" class="form-label">Responsable</label>
+                <select asp-for="Command.ResponsableId" asp-items="Model.ResponsablesSelectList" class="form-select">
+                    <option value="">-- Seleccione un responsable --</option>
+                </select>
                 <span asp-validation-for="Command.ResponsableId" class="text-danger"></span>
-                <small class="form-text text-muted">A los fines de prueba, ingrese un GUID válido que exista en la BD (o mock).</small>
             </div>
 
             <div class="mt-4">

@@ -7,6 +7,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Responsables.Commands.Create;
 
 namespace AuditManager.Web.Services;
 
@@ -41,5 +42,17 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
     {
         var response = await httpClient.PatchAsJsonAsync($"api/auditorias/{id}/estado", command);
         return response.IsSuccessStatusCode;
+    }
+
+    public async Task<List<ResponsableDto>> GetResponsablesAsync()
+    {
+        return await httpClient.GetFromJsonAsync<List<ResponsableDto>>("api/responsables") ?? new List<ResponsableDto>();
+    }
+
+    public async Task<Guid> CreateResponsableAsync(CreateResponsableCommand command)
+    {
+        var response = await httpClient.PostAsJsonAsync("api/responsables", command);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Guid>();
     }
 }
