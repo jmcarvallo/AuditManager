@@ -28,19 +28,13 @@ public class LoginModel(IAuditoriaApiClient apiClient) : PageModel
             {
                 new(ClaimTypes.Name,  result.Username),
                 new("cargo",          result.Cargo),
-                new("access_token",   result.Token)
+                new("access_token",   result.Token)   // JWT guardado como claim
             };
 
             var identity  = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            var props = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc   = System.DateTimeOffset.UtcNow.AddHours(8)
-            };
-            // Store the JWT so TokenHandler can retrieve it
-            props.StoreTokens([new AuthenticationToken { Name = "access_token", Value = result.Token }]);
+            var props = new AuthenticationProperties { IsPersistent = true };
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
             return RedirectToPage("/Index");

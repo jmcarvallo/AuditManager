@@ -1,11 +1,11 @@
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace AuditManager.Web.Handlers;
 
 /// <summary>
-/// Reads the JWT stored in the web session cookie and attaches it as Bearer
-/// to every outgoing HTTP request to the API.
+/// Reads the JWT stored as the 'access_token' claim (set during login)
+/// and attaches it as Bearer to every outgoing HTTP request to the API.
 /// </summary>
 public class TokenHandler(IHttpContextAccessor httpContextAccessor) : DelegatingHandler
 {
@@ -15,7 +15,7 @@ public class TokenHandler(IHttpContextAccessor httpContextAccessor) : Delegating
         var context = httpContextAccessor.HttpContext;
         if (context != null)
         {
-            var token = await context.GetTokenAsync("access_token");
+            var token = context.User.FindFirstValue("access_token");
             if (!string.IsNullOrEmpty(token))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
