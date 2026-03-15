@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
@@ -10,11 +12,24 @@ using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
 using AuditManager.Application.Features.Auth.Commands.Register;
 using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Responsables.Commands.Create;
+using Microsoft.AspNetCore.Http;
 
 namespace AuditManager.Web.Services;
 
-public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
+public class AuditoriaApiClient : IAuditoriaApiClient
 {
+    private readonly HttpClient _httpClient;
+
+    public AuditoriaApiClient(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+    {
+        _httpClient = httpClient;
+
+        // Leer el token JWT del claim 'access_token' y añadirlo al header Bearer
+        var token = httpContextAccessor.HttpContext?.User?.FindFirstValue("access_token");
+        if (!string.IsNullOrEmpty(token))
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+    }
     public async Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null, DateTime? fechaInicio = null, DateTime? fechaFin = null, AuditManager.Core.Enums.EstadoAuditoria? estado = null)
     {
         var query = new List<string>();
@@ -23,7 +38,7 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         if (fechaFin.HasValue)      query.Add($"fechaFin={fechaFin.Value:yyyy-MM-dd}");
         if (estado.HasValue)        query.Add($"estado={(int)estado.Value}");
         var url = query.Count > 0 ? "api/auditorias?" + string.Join("&", query) : "api/auditorias";
-        return await httpClient.GetFromJsonAsync<List<AuditoriaDto>>(url) ?? new List<AuditoriaDto>();
+        return await _httpClient.GetFromJsonAsync<List<AuditoriaDto>>(url) ?? new List<AuditoriaDto>();
     }
 
     public async Task<AuditoriaDto?> GetAuditoriaByIdAsync(Guid id)
@@ -35,49 +50,49 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
 
     public async Task<AuditoriaDto?> CreateAuditoriaAsync(CreateAuditoriaCommand command)
     {
-        var response = await httpClient.PostAsJsonAsync("api/auditorias", command);
+        var response = await _httpClient.PostAsJsonAsync("api/auditorias", command);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<AuditoriaDto>();
     }
 
     public async Task<bool> UpdateAuditoriaAsync(Guid id, UpdateAuditoriaCommand command)
     {
-        var response = await httpClient.PutAsJsonAsync($"api/auditorias/{id}", command);
+        var response = await _httpClient.PutAsJsonAsync($"api/auditorias/{id}", command);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> ChangeStatusAsync(Guid id, UpdateAuditoriaStatusCommand command)
     {
-        var response = await httpClient.PatchAsJsonAsync($"api/auditorias/{id}/estado", command);
+        var response = await _httpClient.PatchAsJsonAsync($"api/auditorias/{id}/estado", command);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<List<ResponsableDto>> GetResponsablesAsync()
     {
-        return await httpClient.GetFromJsonAsync<List<ResponsableDto>>("api/responsables") ?? new List<ResponsableDto>();
+        return await _httpClient.GetFromJsonAsync<List<ResponsableDto>>("api/responsables") ?? new List<ResponsableDto>();
     }
 
     public async Task<Guid> CreateResponsableAsync(CreateResponsableCommand command)
     {
-        var response = await httpClient.PostAsJsonAsync("api/responsables", command);
+        var response = await _httpClient.PostAsJsonAsync("api/responsables", command);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<Guid>();
     }
 
     public async Task CreateHallazgoAsync(CreateHallazgoCommand command)
     {
-        var response = await httpClient.PostAsJsonAsync("api/hallazgos", command);
+        var response = await _httpClient.PostAsJsonAsync("api/hallazgos", command);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task<List<HallazgoDto>> GetHallazgosByAuditoriaAsync(Guid auditoriaId)
     {
-        return await httpClient.GetFromJsonAsync<List<HallazgoDto>>($"api/hallazgos?auditoriaId={auditoriaId}") ?? new List<HallazgoDto>();
+        return await _httpClient.GetFromJsonAsync<List<HallazgoDto>>($"api/hallazgos?auditoriaId={auditoriaId}") ?? new List<HallazgoDto>();
     }
 
     public async Task DeleteHallazgoAsync(Guid hallazgoId)
     {
-        var response = await httpClient.DeleteAsync($"api/hallazgos/{hallazgoId}");
+        var response = await _httpClient.DeleteAsync($"api/hallazgos/{hallazgoId}");
         response.EnsureSuccessStatusCode();
     }
 
@@ -88,20 +103,20 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         if (fechaInicio.HasValue) query.Add($"fechaInicio={fechaInicio.Value:yyyy-MM-dd}");
         if (fechaFin.HasValue) query.Add($"fechaFin={fechaFin.Value:yyyy-MM-dd}");
         if (query.Count > 0) url += "?" + string.Join("&", query);
-        return await httpClient.GetFromJsonAsync<List<AuditoriaResumenDto>>(url) ?? new List<AuditoriaResumenDto>();
+        return await _httpClient.GetFromJsonAsync<List<AuditoriaResumenDto>>(url) ?? new List<AuditoriaResumenDto>();
     }
 
     public async Task<LoginResponseDto> LoginAsync(string username, string password)
     {
         var body = new { username, password };
-        var response = await httpClient.PostAsJsonAsync("api/auth/login", body);
+        var response = await _httpClient.PostAsJsonAsync("api/auth/login", body);
         response.EnsureSuccessStatusCode();
         return (await response.Content.ReadFromJsonAsync<LoginResponseDto>())!;
     }
 
     public async Task RegisterAsync(RegisterUserCommand command)
     {
-        var response = await httpClient.PostAsJsonAsync("api/auth/register", command);
+        var response = await _httpClient.PostAsJsonAsync("api/auth/register", command);
         response.EnsureSuccessStatusCode();
     }
 }

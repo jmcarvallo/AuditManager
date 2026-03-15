@@ -1,5 +1,4 @@
 using System;
-using AuditManager.Web.Handlers;
 using AuditManager.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -39,15 +38,11 @@ builder.Services.AddRazorPages(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-// TokenHandler para inyectar JWT en llamadas al API
-builder.Services.AddTransient<TokenHandler>();
-
-// Configure API Client con TokenHandler
+// Configure API Client
 builder.Services.AddHttpClient<IAuditoriaApiClient, AuditoriaApiClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5133/");
-})
-.AddHttpMessageHandler<TokenHandler>();
+});
 
 var app = builder.Build();
 
