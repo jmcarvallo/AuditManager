@@ -41,7 +41,7 @@ builder.Services.AddHttpContextAccessor();
 // Configure API Client
 builder.Services.AddHttpClient<IAuditoriaApiClient, AuditoriaApiClient>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5133/");
+    client.BaseAddress = new Uri("https://localhost:7197/");
 });
 
 var app = builder.Build();

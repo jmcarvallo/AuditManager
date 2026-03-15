@@ -24,12 +24,15 @@ public class AuditoriaApiClient : IAuditoriaApiClient
     {
         _httpClient = httpClient;
 
-        // Leer el token JWT del claim 'access_token' y añadirlo al header Bearer
-        var token = httpContextAccessor.HttpContext?.User?.FindFirstValue("access_token");
-        if (!string.IsNullOrEmpty(token))
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+        var context = httpContextAccessor.HttpContext;
+        var token = context?.User?.FindFirst("access_token")?.Value;
+        
+        if (context?.User?.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(token))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
     }
+
     public async Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null, DateTime? fechaInicio = null, DateTime? fechaFin = null, AuditManager.Core.Enums.EstadoAuditoria? estado = null)
     {
         var query = new List<string>();

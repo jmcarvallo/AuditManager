@@ -11,46 +11,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuditManager — Iniciar Sesión</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border-radius: 1rem; border: none; }
+        .btn-primary { border-radius: 0.5rem; padding: 0.75rem; font-weight: 600; }
+        .form-floating > label { color: #6c757d; }
+        .vh-100 { min-height: 100vh; }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 <div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">🔐 AuditManager</h2>
-                    <h5 class="text-center text-muted mb-4">Iniciar Sesión</h5>
-
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold text-primary"><i class="bi bi-shield-check me-2"></i>AuditManager</h1>
+                <p class="text-muted">Gestión de Auditorías Enterprise</p>
+            </div>
+            
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h4 class="fw-bold mb-4">Bienvenido</h4>
+                    
                     @if (!string.IsNullOrEmpty(Model.ErrorMessage))
                     {
-                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>@Model.ErrorMessage</div>
+                        </div>
                     }
                     @if (TempData["Success"] != null)
                     {
-                        <div class="alert alert-success">@TempData["Success"]</div>
+                        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <div>@TempData["Success"]</div>
+                        </div>
                     }
 
                     <form method="post">
-                        <div class="mb-3">
-                            <label for="Username" class="form-label">Usuario</label>
-                            <input id="Username" name="Username" type="text" class="form-control"
-                                   placeholder="Nombre de usuario" required autofocus />
+                        <div class="form-floating mb-3">
+                            <input asp-for="Username" class="form-control" placeholder="Usuario" required autofocus />
+                            <label asp-for="Username">Usuario</label>
+                            <span asp-validation-for="Username" class="text-danger small"></span>
                         </div>
-                        <div class="mb-3">
-                            <label for="Password" class="form-label">Contraseña</label>
-                            <input id="Password" name="Password" type="password" class="form-control"
-                                   placeholder="Contraseña" required />
+                        <div class="form-floating mb-4">
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" required />
+                            <label asp-for="Password">Contraseña</label>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary">Ingresar</button>
+                        
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary shadow-sm">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </button>
                         </div>
+                        
                         <div class="text-center">
-                            <span class="text-muted">¿No tienes cuenta?</span>
-                            <a asp-page="/Auth/Register">Regístrate aquí</a>
+                            <p class="text-muted mb-0">¿No tienes cuenta? <a asp-page="/Auth/Register" class="text-decoration-none fw-bold">Regístrate</a></p>
                         </div>
                     </form>
                 </div>
             </div>
+            <p class="text-center text-muted mt-4 small">&copy; 2026 AuditManager Suite</p>
         </div>
     </div>
 </div>

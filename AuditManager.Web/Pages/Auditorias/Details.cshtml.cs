@@ -15,6 +15,7 @@ namespace AuditManager.Web.Pages.Auditorias;
 public class DetailsModel(IAuditoriaApiClient apiClient) : PageModel
 {
     public AuditoriaDto Auditoria { get; set; } = default!;
+    public string ResponsableNombre { get; set; } = "Cargando...";
     public List<HallazgoDto> Hallazgos { get; set; } = [];
 
     [BindProperty(SupportsGet = true)]
@@ -33,6 +34,11 @@ public class DetailsModel(IAuditoriaApiClient apiClient) : PageModel
         if (auditoria == null) return NotFound();
 
         Auditoria = auditoria;
+        
+        // Fetch responsables to find the name
+        var responsables = await apiClient.GetResponsablesAsync();
+        ResponsableNombre = responsables.FirstOrDefault(r => r.Id == auditoria.ResponsableId)?.Nombre ?? "No encontrado";
+
         var todos = await apiClient.GetHallazgosByAuditoriaAsync(id);
         Hallazgos = SeveridadFiltro.HasValue
             ? todos.Where(h => h.Severidad == SeveridadFiltro.Value).ToList()

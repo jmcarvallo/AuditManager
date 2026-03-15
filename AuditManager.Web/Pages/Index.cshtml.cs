@@ -26,6 +26,11 @@ public class IndexModel(IAuditoriaApiClient apiClient) : PageModel
     [BindProperty(SupportsGet = true)] public DateTime?          FechaFin      { get; set; }
     [BindProperty(SupportsGet = true)] public EstadoAuditoria?   Estado        { get; set; }
 
+    public int TotalAuditorias { get; set; }
+    public int Pendientes { get; set; }
+    public int EnProceso { get; set; }
+    public int Finalizadas { get; set; }
+
     public async Task OnGetAsync()
     {
         var responsables = await apiClient.GetResponsablesAsync();
@@ -37,5 +42,11 @@ public class IndexModel(IAuditoriaApiClient apiClient) : PageModel
             fechaInicio:   FechaInicio,
             fechaFin:      FechaFin,
             estado:        Estado);
+
+        // Calcular KPIs (sobre el conjunto filtrado o podrías llamar a un endpoint de estadísticas si existiera)
+        TotalAuditorias = Auditorias.Count;
+        Pendientes      = Auditorias.Count(a => a.Estado == EstadoAuditoria.Pendiente);
+        EnProceso       = Auditorias.Count(a => a.Estado == EstadoAuditoria.EnProceso);
+        Finalizadas     = Auditorias.Count(a => a.Estado == EstadoAuditoria.Finalizada);
     }
 }
