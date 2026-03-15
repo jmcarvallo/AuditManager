@@ -1,6 +1,7 @@
 using System;
 using AuditManager.Web.Handlers;
 using AuditManager.Web.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
