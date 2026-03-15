@@ -11,11 +11,27 @@
 
 <form method="get" class="card card-body bg-light mb-4">
     <div class="row align-items-end g-3">
-        <div class="col-md-5">
-            <label for="ResponsableId" class="form-label fw-semibold">Filtrar por Responsable</label>
+        <div class="col-md-3">
+            <label for="ResponsableId" class="form-label fw-semibold">Responsable</label>
             <select id="ResponsableId" name="ResponsableId" asp-items="Model.ResponsablesSelectList" class="form-select">
-                <option value="">-- Todos los responsables --</option>
+                <option value="">-- Todos --</option>
             </select>
+        </div>
+        <div class="col-md-2">
+            <label for="Estado" class="form-label fw-semibold">Estado</label>
+            <select id="Estado" name="Estado" asp-items="Model.EstadosSelectList" class="form-select">
+                <option value="">-- Todos --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="FechaInicio" class="form-label fw-semibold">Inicio desde</label>
+            <input type="date" id="FechaInicio" name="FechaInicio" class="form-control"
+                   value="@(Model.FechaInicio.HasValue ? Model.FechaInicio.Value.ToString("yyyy-MM-dd") : "")" />
+        </div>
+        <div class="col-md-2">
+            <label for="FechaFin" class="form-label fw-semibold">Fin hasta</label>
+            <input type="date" id="FechaFin" name="FechaFin" class="form-control"
+                   value="@(Model.FechaFin.HasValue ? Model.FechaFin.Value.ToString("yyyy-MM-dd") : "")" />
         </div>
         <div class="col-md-auto">
             <button type="submit" class="btn btn-secondary">Filtrar</button>

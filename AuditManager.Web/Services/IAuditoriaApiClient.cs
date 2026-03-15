@@ -12,7 +12,7 @@ namespace AuditManager.Web.Services;
 
 public interface IAuditoriaApiClient
 {
-    Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null);
+    Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null, DateTime? fechaInicio = null, DateTime? fechaFin = null, AuditManager.Core.Enums.EstadoAuditoria? estado = null);
     Task<AuditoriaDto?> GetAuditoriaByIdAsync(Guid id);
     Task<AuditoriaDto?> CreateAuditoriaAsync(CreateAuditoriaCommand command);
     Task<bool> UpdateAuditoriaAsync(Guid id, UpdateAuditoriaCommand command);

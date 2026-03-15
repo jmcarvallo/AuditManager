@@ -14,11 +14,14 @@ namespace AuditManager.Web.Services;
 
 public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
 {
-    public async Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null)
+    public async Task<List<AuditoriaDto>> GetAuditoriasAsync(Guid? responsableId = null, DateTime? fechaInicio = null, DateTime? fechaFin = null, AuditManager.Core.Enums.EstadoAuditoria? estado = null)
     {
-        var url = responsableId.HasValue
-            ? $"api/auditorias?responsableId={responsableId.Value}"
-            : "api/auditorias";
+        var query = new List<string>();
+        if (responsableId.HasValue) query.Add($"responsableId={responsableId.Value}");
+        if (fechaInicio.HasValue)   query.Add($"fechaInicio={fechaInicio.Value:yyyy-MM-dd}");
+        if (fechaFin.HasValue)      query.Add($"fechaFin={fechaFin.Value:yyyy-MM-dd}");
+        if (estado.HasValue)        query.Add($"estado={(int)estado.Value}");
+        var url = query.Count > 0 ? "api/auditorias?" + string.Join("&", query) : "api/auditorias";
         return await httpClient.GetFromJsonAsync<List<AuditoriaDto>>(url) ?? new List<AuditoriaDto>();
     }
 
