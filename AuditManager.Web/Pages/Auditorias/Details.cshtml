@@ -53,9 +53,24 @@
 
 <h3>Hallazgos</h3>
 
+<form method="get" asp-page="/Auditorias/Details" asp-route-id="@Model.Auditoria.Id" class="d-flex align-items-end gap-2 mb-3">
+    <div>
+        <label for="SeveridadFiltro" class="form-label fw-semibold mb-1">Filtrar por Severidad</label>
+        <select id="SeveridadFiltro" name="SeveridadFiltro" asp-items="Model.SeveridadesSelectList" class="form-select form-select-sm" style="min-width:160px">
+            <option value="">-- Todas --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-sm btn-secondary">Filtrar</button>
+    <a asp-page="/Auditorias/Details" asp-route-id="@Model.Auditoria.Id" class="btn btn-sm btn-outline-secondary">Limpiar</a>
+    @if (Model.SeveridadFiltro.HasValue)
+    {
+        <span class="badge bg-secondary align-self-center">Mostrando: @Model.SeveridadFiltro (@Model.Hallazgos.Count)</span>
+    }
+</form>
+
 @if (!Model.Hallazgos.Any())
 {
-    <p class="text-muted">No hay hallazgos registrados para esta auditoría.</p>
+    <p class="text-muted">No hay hallazgos @(Model.SeveridadFiltro.HasValue ? $"con severidad {Model.SeveridadFiltro}" : "registrados para esta auditoría").</p>
 }
 else
 {
