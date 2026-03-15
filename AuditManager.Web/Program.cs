@@ -13,6 +13,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath  = "/Auth/Logout";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
+        // Rechaza cookies viejas que no tengan el claim access_token (ej: cookies pre-fix)
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnValidatePrincipal = async ctx =>
+            {
+                var token = ctx.Principal?.FindFirst("access_token")?.Value;
+                if (string.IsNullOrEmpty(token))
+                {
+                    ctx.RejectPrincipal();
+                    await ctx.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            }
+        };
     });
 
 // Razor Pages con autorización global (todas las páginas requieren login)
