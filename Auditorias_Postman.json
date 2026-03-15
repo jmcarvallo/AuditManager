@@ -2,12 +2,82 @@
 	"info": {
 		"_postman_id": "4b68ce9d-9e19-4a94-bba9-11c50e206ab6",
 		"name": "AuditManager API",
-		"description": "Endpoints para gestionar Auditorias y Hallazgos",
+		"description": "# AuditManager API\n\nAPI REST para la gestión de auditorías internas.\n\n## Autenticación\nTodos los endpoints (excepto `/api/auth/*`) requieren un **JWT Bearer Token**.\n\n### Flujo recomendado:\n1. Ejecuta **`Auth / Registrar Usuario`** (solo la primera vez)\n2. Ejecuta **`Auth / Login`** — el script guarda el token en la variable `{{token}}` automáticamente\n3. El resto de requests ya usan `{{token}}` en el header `Authorization`\n\n## Variables de colección\n| Variable | Descripción |\n|---|---|\n| `baseUrl` | URL base del API (`http://localhost:5133`) |\n| `token` | JWT — se llena automáticamente al hacer login |",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
 	},
 	"item": [
 		{
+			"name": "Auth",
+			"description": "Endpoints de autenticación. **No requieren token.**",
+			"item": [
+				{
+					"name": "Registrar Usuario",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"jgarcia\",\n  \"correo\": \"jgarcia@empresa.com\",\n  \"password\": \"MiPassword123!\",\n  \"cargo\": \"Auditor Senior\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Registra un nuevo usuario en el sistema.\n\n**Body:**\n- `username` — nombre de usuario único\n- `correo` — dirección de email\n- `password` — contraseña (mínimo 6 caracteres)\n- `cargo` — cargo o rol del usuario (ej: Auditor Senior, Coordinador)\n\n**Respuesta exitosa:** `201 Created`"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const data = pm.response.json();",
+									"    pm.collectionVariables.set('token', data.token);",
+									"    console.log('Token JWT guardado automáticamente en {{token}}');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"jgarcia\",\n  \"password\": \"MiPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Autentica al usuario y devuelve un **JWT Bearer Token**.\n\n**Body:**\n- `username` — nombre de usuario\n- `password` — contraseña\n\n**Respuesta exitosa:** `200 OK`\n```json\n{\n  \"token\": \"eyJhbGciOiJIUzI1NiIs...\",\n  \"username\": \"jgarcia\",\n  \"cargo\": \"Auditor Senior\"\n}\n```\n\n> El script de test guarda el token automáticamente en la variable `{{token}}`."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Auditorías",
+			"description": "CRUD de auditorías. **Requieren token JWT.**",
 			"item": [
 				{
 					"name": "Listar Auditorias",
@@ -19,30 +89,13 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "auditorias"],
 							"query": [
-								{
-									"key": "fechaInicio",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "fechaFin",
-									"value": "",
-									"disabled": true
-								},
-								{
-									"key": "estado",
-									"value": "",
-									"description": "0=Pendiente, 1=EnProceso, 2=Finalizada",
-									"disabled": true
-								},
-								{
-									"key": "responsableId",
-									"value": "<RESPONSABLE_ID>",
-									"description": "GUID del responsable para filtrar auditorías",
-									"disabled": true
-								}
+								{ "key": "fechaInicio", "value": "", "description": "Filtrar por fecha de inicio (YYYY-MM-DD)", "disabled": true },
+								{ "key": "fechaFin",    "value": "", "description": "Filtrar por fecha de fin (YYYY-MM-DD)", "disabled": true },
+								{ "key": "estado",       "value": "", "description": "0=Pendiente | 1=EnProceso | 2=Finalizada", "disabled": true },
+								{ "key": "responsableId","value": "<RESPONSABLE_ID>", "description": "GUID del responsable para filtrar auditorías", "disabled": true }
 							]
-						}
+						},
+						"description": "Devuelve la lista de todas las auditorías.\n\n**Filtros opcionales (query params):**\n- `fechaInicio` — auditorías con FechaInicio ≥ este valor\n- `fechaFin` — auditorías con FechaFin ≤ este valor\n- `estado` — `0` Pendiente, `1` En Proceso, `2` Finalizada\n- `responsableId` — GUID del responsable asignado\n\nSe pueden combinar varios filtros en la misma petición."
 					},
 					"response": []
 				},
@@ -50,26 +103,17 @@
 					"name": "Crear Auditoria",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"titulo\": \"Auditoría de Sistemas 2026\",\n  \"fechaInicio\": \"2026-03-20T00:00:00\",\n  \"fechaFin\": \"2026-04-20T00:00:00\",\n  \"areaAuditada\": \"IT Department\",\n  \"responsableId\": \"<A GUID HERE>\"\n}"
+							"raw": "{\n  \"titulo\": \"Auditoría de Sistemas 2026\",\n  \"fechaInicio\": \"2026-03-20T00:00:00\",\n  \"fechaFin\": \"2026-04-20T00:00:00\",\n  \"areaAuditada\": \"IT Department\",\n  \"responsableId\": \"<RESPONSABLE_ID>\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auditorias",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auditorias"
-							]
-						}
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auditorias"]
+						},
+						"description": "Crea una nueva auditoría en estado **Pendiente**.\n\n**Body:**\n- `titulo` — título descriptivo\n- `fechaInicio` / `fechaFin` — rango de ejecución\n- `areaAuditada` — área o departamento auditado\n- `responsableId` — GUID del responsable (obtener de `/api/responsables`)\n\n**Respuesta exitosa:** `201 Created` con el objeto de auditoría creado."
 					},
 					"response": []
 				},
@@ -77,56 +121,35 @@
 					"name": "Actualizar Auditoria",
 					"request": {
 						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"id\": \"<AUDITORIA_ID>\",\n  \"titulo\": \"Auditoría de Sistemas - Actualizada\",\n  \"fechaInicio\": \"2026-03-20\",\n  \"fechaFin\": \"2026-04-25\",\n  \"areaAuditada\": \"IT Department\",\n  \"responsableId\": \"<RESPONSABLE_ID>\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auditorias/<AUDITORIA_ID>",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auditorias",
-								"<AUDITORIA_ID>"
-							]
-						}
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auditorias", "<AUDITORIA_ID>"]
+						},
+						"description": "Actualiza los datos de una auditoría existente.\n\n> Solo se puede editar una auditoría en estado **Pendiente**.\n\n**Restricción:** El `id` del body debe coincidir con el `id` de la URL."
 					},
 					"response": []
 				},
 				{
-					"name": "Actualizar Estado (A EnProceso)",
+					"name": "Cambiar Estado (A EnProceso)",
 					"request": {
 						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"id\": \"<AUDITORIA_ID>\",\n  \"nuevoEstado\": 1\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/auditorias/<AUDITORIA_ID>/estado",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auditorias",
-								"<AUDITORIA_ID>",
-								"estado"
-							]
-						}
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auditorias", "<AUDITORIA_ID>", "estado"]
+						},
+						"description": "Actualiza el estado de una auditoría siguiendo el flujo:\n\n`Pendiente (0) → En Proceso (1) → Finalizada (2)`\n\n**Body:**\n- `id` — GUID de la auditoría\n- `nuevoEstado` — `0` Pendiente, `1` En Proceso, `2` Finalizada\n\n**Restricción:** Solo son válidas las transiciones en el orden definido."
 					},
 					"response": []
 				}
@@ -134,6 +157,7 @@
 		},
 		{
 			"name": "Hallazgos",
+			"description": "Gestión de hallazgos dentro de una auditoría. **Requieren token JWT.**",
 			"item": [
 				{
 					"name": "Listar Hallazgos por Auditoría",
@@ -144,13 +168,9 @@
 							"raw": "{{baseUrl}}/api/hallazgos?auditoriaId=<AUDITORIA_ID>",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "hallazgos"],
-							"query": [
-								{
-									"key": "auditoriaId",
-									"value": "<AUDITORIA_ID>"
-								}
-							]
-						}
+							"query": [{ "key": "auditoriaId", "value": "<AUDITORIA_ID>", "description": "GUID de la auditoría" }]
+						},
+						"description": "Devuelve todos los hallazgos de una auditoría específica.\n\n**Query param requerido:**\n- `auditoriaId` — GUID de la auditoría\n\nCada hallazgo incluye: descripción, tipo, severidad (Baja/Media/Alta) y fecha de detección."
 					},
 					"response": []
 				},
@@ -158,26 +178,17 @@
 					"name": "Crear Hallazgo",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"auditoriaId\": \"<AUDITORIA_ID>\",\n  \"descripcion\": \"Fallo en la validación de tokens JWT\",\n  \"tipo\": 0,\n  \"severidad\": 2,\n  \"fechaDeteccion\": \"2026-03-25T00:00:00\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/hallazgos",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"hallazgos"
-							]
-						}
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hallazgos"]
+						},
+						"description": "Registra un nuevo hallazgo en una auditoría.\n\n**Body:**\n- `auditoriaId` — GUID de la auditoría (debe estar **En Proceso**)\n- `descripcion` — descripción del hallazgo\n- `tipo` — `0` Observación, `1` No Conformidad Menor, `2` No Conformidad Mayor\n- `severidad` — `0` Baja, `1` Media, `2` Alta\n- `fechaDeteccion` — fecha y hora en que se detectó\n\n**Respuesta exitosa:** `201 Created` con el `id` del hallazgo."
 					},
 					"response": []
 				},
@@ -188,15 +199,10 @@
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/api/hallazgos/<HALLAZGO_ID>",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"hallazgos",
-								"<HALLAZGO_ID>"
-							]
-						}
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hallazgos", "<HALLAZGO_ID>"]
+						},
+						"description": "Elimina un hallazgo por su ID.\n\n**Restricción:** Solo se puede eliminar si la auditoría asociada está en estado **En Proceso**.\n\n**Respuesta exitosa:** `204 No Content`"
 					},
 					"response": []
 				}
@@ -204,6 +210,7 @@
 		},
 		{
 			"name": "Responsables",
+			"description": "Gestión de auditores/responsables. **Requieren token JWT.**",
 			"item": [
 				{
 					"name": "Listar Responsables",
@@ -214,7 +221,8 @@
 							"raw": "{{baseUrl}}/api/responsables",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "responsables"]
-						}
+						},
+						"description": "Devuelve la lista de todos los responsables/auditores registrados.\n\nUsar los `id` de esta respuesta en el campo `responsableId` al crear o editar auditorías."
 					},
 					"response": []
 				},
@@ -222,12 +230,7 @@
 					"name": "Crear Responsable",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"nombre\": \"María García\",\n  \"correo\": \"maria.garcia@empresa.com\",\n  \"area\": \"Auditoría Interna\"\n}"
@@ -236,7 +239,32 @@
 							"raw": "{{baseUrl}}/api/responsables",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "responsables"]
-						}
+						},
+						"description": "Registra un nuevo responsable/auditor.\n\n**Body:**\n- `nombre` — nombre completo\n- `correo` — email del responsable\n- `area` — área o departamento al que pertenece\n\n**Respuesta exitosa:** `201 Created` con el GUID asignado."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reportes",
+			"description": "Reportes generados desde la vista SQL `vw_AuditoriasFinalizadasResumen`. **Requieren token JWT.**",
+			"item": [
+				{
+					"name": "Reporte Auditorías Finalizadas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reportes/auditorias-finalizadas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reportes", "auditorias-finalizadas"],
+							"query": [
+								{ "key": "fechaInicio", "value": "", "description": "Filtrar por FechaFin >= este valor (YYYY-MM-DD)", "disabled": true },
+								{ "key": "fechaFin",    "value": "", "description": "Filtrar por FechaFin <= este valor (YYYY-MM-DD)", "disabled": true }
+							]
+						},
+						"description": "Devuelve un resumen de auditorías **finalizadas** con conteo de hallazgos por severidad.\n\nConsume directamente la vista SQL `vw_AuditoriasFinalizadasResumen`.\n\n**Filtros opcionales:**\n- `fechaInicio` — incluye auditorías cuya FechaFin ≥ este valor\n- `fechaFin` — incluye auditorías cuya FechaFin ≤ este valor\n\n**Cada registro incluye:**\n- Título, Área, Responsable, FechaFin\n- `HallazgosBaja`, `HallazgosMedia`, `HallazgosAlta`, `TotalHallazgos`"
 					},
 					"response": []
 				}
@@ -246,28 +274,15 @@
 	"event": [
 		{
 			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"script": { "type": "text/javascript", "exec": [""] }
 		},
 		{
 			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"script": { "type": "text/javascript", "exec": [""] }
 		}
 	],
 	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "http://localhost:5133",
-			"type": "string"
-		}
+		{ "key": "baseUrl", "value": "http://localhost:5133", "type": "string" },
+		{ "key": "token",   "value": "", "type": "string", "description": "JWT — se rellena automáticamente al ejecutar Auth/Login" }
 	]
 }
