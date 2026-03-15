@@ -5,6 +5,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Auth.Commands.Register;
 using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Responsables.Commands.Create;
 
@@ -24,4 +25,6 @@ public interface IAuditoriaApiClient
     Task<List<HallazgoDto>> GetHallazgosByAuditoriaAsync(Guid auditoriaId);
     Task DeleteHallazgoAsync(Guid hallazgoId);
     Task<List<AuditoriaResumenDto>> GetReporteAsync(DateTime? fechaInicio = null, DateTime? fechaFin = null);
+    Task<LoginResponseDto> LoginAsync(string username, string password);
+    Task RegisterAsync(RegisterUserCommand command);
 }

@@ -7,6 +7,7 @@ using AuditManager.Application.DTOs;
 using AuditManager.Application.Features.Auditorias.Commands.Create;
 using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
+using AuditManager.Application.Features.Auth.Commands.Register;
 using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Responsables.Commands.Create;
 
@@ -88,5 +89,19 @@ public class AuditoriaApiClient(HttpClient httpClient) : IAuditoriaApiClient
         if (fechaFin.HasValue) query.Add($"fechaFin={fechaFin.Value:yyyy-MM-dd}");
         if (query.Count > 0) url += "?" + string.Join("&", query);
         return await httpClient.GetFromJsonAsync<List<AuditoriaResumenDto>>(url) ?? new List<AuditoriaResumenDto>();
+    }
+
+    public async Task<LoginResponseDto> LoginAsync(string username, string password)
+    {
+        var body = new { username, password };
+        var response = await httpClient.PostAsJsonAsync("api/auth/login", body);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<LoginResponseDto>())!;
+    }
+
+    public async Task RegisterAsync(RegisterUserCommand command)
+    {
+        var response = await httpClient.PostAsJsonAsync("api/auth/register", command);
+        response.EnsureSuccessStatusCode();
     }
 }

@@ -1,0 +1,65 @@
+@page
+@model AuditManager.Web.Pages.Auth.RegisterModel
+@{
+    ViewData["Title"] = "Registrarse";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuditManager — Registro</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">🔐 AuditManager</h2>
+                    <h5 class="text-center text-muted mb-4">Crear Cuenta</h5>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="Username" class="form-label">Usuario</label>
+                            <input id="Username" name="Username" type="text" class="form-control"
+                                   placeholder="Nombre de usuario único" required autofocus />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Correo" class="form-label">Correo Electrónico</label>
+                            <input id="Correo" name="Correo" type="email" class="form-control"
+                                   placeholder="correo@empresa.com" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Password" class="form-label">Contraseña</label>
+                            <input id="Password" name="Password" type="password" class="form-control"
+                                   placeholder="Mínimo 6 caracteres" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Cargo" class="form-label">Cargo</label>
+                            <input id="Cargo" name="Cargo" type="text" class="form-control"
+                                   placeholder="Ej: Auditor Senior, Coordinador" required />
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-success">Crear Cuenta</button>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-muted">¿Ya tienes cuenta?</span>
+                            <a asp-page="/Auth/Login">Inicia sesión aquí</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,7 +1,9 @@
 using AuditManager.Application.Interfaces;
 using AuditManager.Infrastructure.Data;
+using AuditManager.Infrastructure.Features.Auth;
 using AuditManager.Infrastructure.Features.Reportes;
 using AuditManager.Infrastructure.Repositories;
+using AuditManager.Infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,9 +20,12 @@ public static class InfrastructureServiceRegistration
 
         services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 
-        // Registrar handlers de MediatR ubicados en Infrastructure (ej: reportes con EF directo)
+        // JWT token generator
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        // Registrar handlers de MediatR ubicados en Infrastructure
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(typeof(GetReporteAuditoriasQueryHandler).Assembly));
+            cfg.RegisterServicesFromAssembly(typeof(LoginCommandHandler).Assembly));
 
         return services;
     }

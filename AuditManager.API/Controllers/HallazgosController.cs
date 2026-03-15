@@ -4,12 +4,14 @@ using AuditManager.Application.Features.Hallazgos.Commands.Create;
 using AuditManager.Application.Features.Hallazgos.Commands.Delete;
 using AuditManager.Application.Features.Hallazgos.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditManager.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class HallazgosController(IMediator mediator) : ControllerBase
 {
     [HttpGet]

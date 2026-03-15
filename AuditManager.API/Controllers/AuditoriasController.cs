@@ -5,12 +5,14 @@ using AuditManager.Application.Features.Auditorias.Commands.Update;
 using AuditManager.Application.Features.Auditorias.Commands.UpdateStatus;
 using AuditManager.Application.Features.Auditorias.Queries.GetAuditoriasList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditManager.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class AuditoriasController(IMediator mediator) : ControllerBase
 {
     [HttpGet]

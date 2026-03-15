@@ -1,16 +1,39 @@
 using System;
+using AuditManager.Web.Handlers;
 using AuditManager.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+// Cookie Authentication (guarda el JWT como access_token en la cookie)
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath   = "/Auth/Login";
+        options.LogoutPath  = "/Auth/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
 
-// Configure API Client
+// Razor Pages con autorización global (todas las páginas requieren login)
+builder.Services.AddRazorPages(options =>
+{
+    // Páginas públicas (no requieren login)
+    options.Conventions.AllowAnonymousToPage("/Auth/Login");
+    options.Conventions.AllowAnonymousToPage("/Auth/Register");
+}).AddRazorPagesOptions(o => o.Conventions.AuthorizeFolder("/"));
+
+builder.Services.AddHttpContextAccessor();
+
+// TokenHandler para inyectar JWT en llamadas al API
+builder.Services.AddTransient<TokenHandler>();
+
+// Configure API Client con TokenHandler
 builder.Services.AddHttpClient<IAuditoriaApiClient, AuditoriaApiClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5133/");
-});
+})
+.AddHttpMessageHandler<TokenHandler>();
 
 var app = builder.Build();
 
@@ -18,17 +41,14 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();

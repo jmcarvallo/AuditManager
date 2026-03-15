@@ -2,12 +2,14 @@ using System;
 using System.Threading.Tasks;
 using AuditManager.Application.Features.Reportes.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditManager.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ReportesController(IMediator mediator) : ControllerBase
 {
     /// <summary>

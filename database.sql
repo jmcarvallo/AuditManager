@@ -48,6 +48,17 @@ CREATE TABLE Hallazgos (
 );
 GO
 
+-- 4. TABLA: Usuarios (autenticación JWT)
+CREATE TABLE Usuarios (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    Username NVARCHAR(50) NOT NULL UNIQUE,
+    Correo NVARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(MAX) NOT NULL,
+    Cargo NVARCHAR(100) NOT NULL,
+    CreadoEn DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+);
+GO
+
 -- VISTA: Auditorías finalizadas con número de hallazgos por severidad
 CREATE OR ALTER VIEW vw_AuditoriasFinalizadasResumen
 AS

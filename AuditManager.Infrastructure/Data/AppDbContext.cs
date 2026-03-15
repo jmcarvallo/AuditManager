@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Auditoria> Auditorias { get; set; } = null!;
     public DbSet<Hallazgo> Hallazgos { get; set; } = null!;
     public DbSet<Responsable> Responsables { get; set; } = null!;
+    public DbSet<Usuario> Usuarios { get; set; } = null!;
 
     // Entidad keyless — mapea directamente a la vista SQL vw_AuditoriasFinalizadasResumen
     public DbSet<AuditoriaResumenView> AuditoriasResumen { get; set; } = null!;

@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using AuditManager.Application.Features.Responsables.Commands.Create;
 using AuditManager.Application.Features.Responsables.Queries.GetList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditManager.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ResponsablesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
