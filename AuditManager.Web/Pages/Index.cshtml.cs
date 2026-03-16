@@ -33,6 +33,13 @@ public class IndexModel(IAuditoriaApiClient apiClient) : PageModel
 
     public async Task OnGetAsync()
     {
+        // Solo cargar datos si el usuario está autenticado CON NUESTRO SISTEMA (teniendo un token)
+        var token = User.FindFirst("access_token")?.Value;
+        if (User.Identity?.IsAuthenticated != true || string.IsNullOrEmpty(token))
+        {
+            return;
+        }
+
         var responsables = await apiClient.GetResponsablesAsync();
         ResponsablesSelectList = responsables.ConvertAll(r =>
             new SelectListItem($"{r.Nombre} ({r.Area})", r.Id.ToString()));

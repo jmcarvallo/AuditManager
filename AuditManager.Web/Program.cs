@@ -41,19 +41,23 @@ builder.Services.AddHttpContextAccessor();
 // Configure API Client
 builder.Services.AddHttpClient<IAuditoriaApiClient, AuditoriaApiClient>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7197/");
+    var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7197/";
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

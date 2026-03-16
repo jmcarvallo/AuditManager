@@ -53,6 +53,7 @@ public class Program
         })
         .AddJwtBearer(options =>
         {
+            options.RequireHttpsMetadata = false; // Permitir JWT sobre HTTP (común en hosting compartido)
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -76,9 +77,13 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseHttpsRedirection(); // Solo en desarrollo
         }
-
-        app.UseHttpsRedirection();
+        else
+        {
+            // En producción (SmarterASP), la redirección a HTTPS suele manejarse 
+            // a nivel de servidor IIS o Cloudflare para evitar problemas de puertos.
+        }
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();

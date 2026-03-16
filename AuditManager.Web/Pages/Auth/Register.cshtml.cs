@@ -27,9 +27,7 @@ public class RegisterModel(IAuditoriaApiClient apiClient) : PageModel
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message.Contains("409") || ex.Message.Contains("Conflict")
-                ? "El nombre de usuario o correo ya está registrado."
-                : "Error al registrar usuario. Intenta de nuevo.";
+            ErrorMessage = $"Error: {ex.Message} {(ex.InnerException != null ? " | Inner: " + ex.InnerException.Message : "")}";
             return Page();
         }
     }
