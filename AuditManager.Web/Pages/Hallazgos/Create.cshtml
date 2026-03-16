@@ -7,7 +7,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-white border-0 pt-4 px-4 text-center">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 text-center">
                 <div class="bg-primary bg-opacity-10 text-primary d-inline-block p-3 rounded-pill mb-3">
                     <i class="bi bi-bug fs-3"></i>
                 </div>
@@ -20,7 +20,7 @@
                     <input type="hidden" asp-for="Command.AuditoriaId" />
 
                     <div class="form-floating mb-3">
-                        <textarea asp-for="Command.Descripcion" class="form-control border-light bg-light rounded-3" placeholder="Descripción" style="height: 120px"></textarea>
+                        <textarea asp-for="Command.Descripcion" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Descripción" style="height: 120px"></textarea>
                         <label asp-for="Command.Descripcion">Descripción del Hallazgo</label>
                         <span asp-validation-for="Command.Descripcion" class="text-danger small"></span>
                     </div>
@@ -29,7 +29,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label asp-for="Command.Tipo" class="form-label small fw-bold text-muted uppercase ms-2">Tipo</label>
-                                <select asp-for="Command.Tipo" class="form-select border-light bg-light rounded-3 shadow-none" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.TipoHallazgo>()">
+                                <select asp-for="Command.Tipo" class="form-select border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.TipoHallazgo>()">
                                 </select>
                                 <span asp-validation-for="Command.Tipo" class="text-danger small"></span>
                             </div>
@@ -37,7 +37,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label asp-for="Command.Severidad" class="form-label small fw-bold text-muted uppercase ms-2">Severidad</label>
-                                <select asp-for="Command.Severidad" class="form-select border-light bg-light rounded-3 shadow-none" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.SeveridadHallazgo>()">
+                                <select asp-for="Command.Severidad" class="form-select border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" asp-items="Html.GetEnumSelectList<AuditManager.Core.Enums.SeveridadHallazgo>()">
                                 </select>
                                 <span asp-validation-for="Command.Severidad" class="text-danger small"></span>
                             </div>
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="form-floating mb-4">
-                        <input asp-for="Command.FechaDeteccion" type="datetime-local" class="form-control border-light bg-light rounded-3" placeholder="Fecha" />
+                        <input asp-for="Command.FechaDeteccion" type="datetime-local" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Fecha" />
                         <label asp-for="Command.FechaDeteccion">Fecha y Hora de Detección</label>
                         <span asp-validation-for="Command.FechaDeteccion" class="text-danger small"></span>
                     </div>

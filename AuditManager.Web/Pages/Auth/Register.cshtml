@@ -5,19 +5,25 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuditManager — Registro</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
     <style>
-        body { background-color: #f8f9fa; }
-        .card { border-radius: 1rem; border: none; }
-        .btn-success { border-radius: 0.5rem; padding: 0.75rem; font-weight: 600; }
-        .form-floating > label { color: #6c757d; }
+        [data-bs-theme="light"] { --bs-body-bg: #f8f9fa; }
+        .card { border-radius: 1.25rem; border: none; transition: background-color 0.3s ease; }
+        .btn-success { border-radius: 0.75rem; padding: 0.8rem; font-weight: 600; }
         .vh-100 { min-height: 100vh; }
+        .form-control { border-radius: 0.75rem; }
     </style>
 </head>
 <body>
@@ -25,8 +31,11 @@
     <div class="row justify-content-center align-items-center vh-100">
         <div class="col-md-6 col-lg-5">
             <div class="text-center mb-4">
-                <h1 class="fw-bold text-primary"><i class="bi bi-shield-check me-2"></i>AuditManager</h1>
-                <p class="text-muted">Únete a la plataforma de auditoría más avanzada</p>
+                <div class="bg-primary text-white d-inline-flex p-3 rounded-4 mb-3 shadow-sm">
+                    <i class="bi bi-shield-check fs-2"></i>
+                </div>
+                <h1 class="fw-bold text-primary mb-1">AuditManager</h1>
+                <p class="text-muted small">Únete a la plataforma de auditoría más avanzada</p>
             </div>
             
             <div class="card shadow-lg">
@@ -35,7 +44,7 @@
                     
                     @if (!string.IsNullOrEmpty(Model.ErrorMessage))
                     {
-                        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <div class="alert alert-danger d-flex align-items-center mb-4 small py-2" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
                             <div>@Model.ErrorMessage</div>
                         </div>
@@ -45,14 +54,14 @@
                         <div class="row g-2">
                             <div class="col-md">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="Username" class="form-control" placeholder="Usuario" required autofocus />
+                                    <input asp-for="Username" class="form-control border-secondary-subtle bg-body-tertiary shadow-none" placeholder="Usuario" required autofocus />
                                     <label asp-for="Username">Usuario</label>
                                     <span asp-validation-for="Username" class="text-danger small"></span>
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="Correo" type="email" class="form-control" placeholder="Correo" required />
+                                    <input asp-for="Correo" type="email" class="form-control border-secondary-subtle bg-body-tertiary shadow-none" placeholder="Correo" required />
                                     <label asp-for="Correo">Correo Electrónico</label>
                                     <span asp-validation-for="Correo" class="text-danger small"></span>
                                 </div>
@@ -60,33 +69,33 @@
                         </div>
                         
                         <div class="form-floating mb-3">
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" required />
+                            <input asp-for="Password" type="password" class="form-control border-secondary-subtle bg-body-tertiary shadow-none" placeholder="Contraseña" required />
                             <label asp-for="Password">Contraseña</label>
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
                         
                         <div class="form-floating mb-4">
-                            <input asp-for="Cargo" class="form-control" placeholder="Cargo" required />
+                            <input asp-for="Cargo" class="form-control border-secondary-subtle bg-body-tertiary shadow-none" placeholder="Cargo" required />
                             <label asp-for="Cargo">Cargo / Posición</label>
                             <span asp-validation-for="Cargo" class="text-danger small"></span>
                         </div>
                         
                         <div class="d-grid mb-4">
-                            <button type="submit" class="btn btn-success shadow-sm">
+                            <button type="submit" class="btn btn-success shadow-sm py-2">
                                 <i class="bi bi-person-plus me-2"></i>Crear Cuenta
                             </button>
                         </div>
                         
                         <div class="text-center">
-                            <p class="text-muted mb-0">¿Ya tienes cuenta? <a asp-page="/Auth/Login" class="text-decoration-none fw-bold">Inicia sesión</a></p>
+                            <p class="text-muted mb-0 small">¿Ya tienes cuenta? <a asp-page="/Auth/Login" class="text-decoration-none fw-bold text-primary">Inicia sesión</a></p>
                         </div>
                     </form>
                 </div>
             </div>
-            <p class="text-center text-muted mt-4 small">&copy; 2026 AuditManager Suite</p>
+            <p class="text-center text-muted mt-4 small">&copy; 2026 <span class="fw-bold">AuditManager</span> Suite</p>
         </div>
     </div>
 </div>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

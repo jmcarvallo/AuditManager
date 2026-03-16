@@ -7,7 +7,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
                 <div class="d-flex align-items-center">
                     <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3 me-3">
                         <i class="bi bi-plus-square fs-4"></i>
@@ -23,13 +23,13 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                     
                     <div class="form-floating mb-3">
-                        <input asp-for="Command.Titulo" class="form-control border-light bg-light rounded-3" placeholder="Título" />
+                        <input asp-for="Command.Titulo" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Título" />
                         <label asp-for="Command.Titulo">Título de la Auditoría</label>
                         <span asp-validation-for="Command.Titulo" class="text-danger small"></span>
                     </div>
                     
                     <div class="form-floating mb-3">
-                        <input asp-for="Command.AreaAuditada" class="form-control border-light bg-light rounded-3" placeholder="Área" />
+                        <input asp-for="Command.AreaAuditada" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Área" />
                         <label asp-for="Command.AreaAuditada">Área Auditada</label>
                         <span asp-validation-for="Command.AreaAuditada" class="text-danger small"></span>
                     </div>
@@ -37,14 +37,14 @@
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input asp-for="Command.FechaInicio" type="date" class="form-control border-light bg-light rounded-3" placeholder="Inicio" />
+                                <input asp-for="Command.FechaInicio" type="date" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Inicio" />
                                 <label asp-for="Command.FechaInicio">Fecha Inicio</label>
                                 <span asp-validation-for="Command.FechaInicio" class="text-danger small"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input asp-for="Command.FechaFin" type="date" class="form-control border-light bg-light rounded-3" placeholder="Fin" />
+                                <input asp-for="Command.FechaFin" type="date" class="form-control border-secondary-subtle bg-body-tertiary rounded-3 shadow-none" placeholder="Fin" />
                                 <label asp-for="Command.FechaFin">Fecha Fin</label>
                                 <span asp-validation-for="Command.FechaFin" class="text-danger small"></span>
                             </div>
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="form-floating mb-4">
-                        <select asp-for="Command.ResponsableId" asp-items="Model.ResponsablesSelectList" class="form-select border-light bg-light rounded-3">
+                        <select asp-for="Command.ResponsableId" asp-items="Model.ResponsablesSelectList" class="form-select border-secondary-subtle bg-body-tertiary rounded-3 shadow-none">
                             <option value="">-- Seleccione un responsable --</option>
                         </select>
                         <label asp-for="Command.ResponsableId">Responsable</label>

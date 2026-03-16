@@ -63,27 +63,6 @@ public class Program
                 ValidAudience            = jwtSettings["Audience"],
                 ValidateLifetime         = true
             };
-
-            // Diagnósticos para depurar 401
-            options.Events = new JwtBearerEvents
-            {
-                OnAuthenticationFailed = context =>
-                {
-                    Console.WriteLine($"[JWT DEBUG] Falló la autenticación: {context.Exception.Message}");
-                    return Task.CompletedTask;
-                },
-                OnTokenValidated = context =>
-                {
-                    Console.WriteLine("[JWT DEBUG] Token validado con éxito.");
-                    return Task.CompletedTask;
-                },
-                OnMessageReceived = context =>
-                {
-                    var authHeader = context.Request.Headers["Authorization"].ToString();
-                    Console.WriteLine($"[JWT DEBUG] Cabecera Authorization recibida: {!string.IsNullOrEmpty(authHeader)}");
-                    return Task.CompletedTask;
-                }
-            };
         });
 
         // Add Layer Dependencies
